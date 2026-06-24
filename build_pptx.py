@@ -471,7 +471,16 @@ content(18, 'Bizim Simülasyonumuz: Kurulum', [
          "hepsi elle. Parametreler makaleyle aynı: sekiz verici, on iki alıcı, 16-QAM, bağımsız Rayleigh "
          "kanal. Her SNR noktasında binlerce burst üretip Monte Carlo ile blok ve bit hata oranını ölçtük. "
          "Sırasıyla dört şey göstereceğim: ana karşılaştırma, sıralamanın etkisi, alıcı tipinin etkisi ve "
-         "anten sayısının etkisi.")
+         "anten sayısının etkisi.\n\n"
+         "[Olası soru — Makalede 2 grafik var, sizde 5, neden?] Makale tek bir gerçek donanım senaryosunu "
+         "kanıtlamayı hedefledi: Şekil 2 temel kazancı, Şekil 3 ise konuma göre gürbüzlüğü gösterir. Biz "
+         "aynı temel sonucu yeniden ürettik (SIM-1), sonra simülasyonun sağladığı esneklikle yöntemin her "
+         "tasarım kararını ayrı ayrı doğruladık: sıralamanın etkisi (SIM-2), alıcı tipi ZF/MMSE (SIM-3a), "
+         "anten sayısı N (SIM-3b). Yani fazladan grafikler öğretici parametre süpürmeleridir. Makalenin "
+         "Şekil 3'ünü (konuma göre gürbüzlük: vericiyi farklı yerlere taşıyıp performansın bozulmadığını "
+         "göstermek) tekrarlamadık, çünkü ideal i.i.d. Rayleigh modelinde her konum istatistiksel olarak "
+         "aynıdır — zaten binlerce rastgele kanal üzerinde ortalama alıyoruz; gerçek konum farkı için "
+         "donanım ölçümü gerekir.")
 
 # 19 — SIM-1
 image_slide(19, 'Simülasyon 1: BLER & BER — Nulling vs V-BLAST', SIM1, bullets=[

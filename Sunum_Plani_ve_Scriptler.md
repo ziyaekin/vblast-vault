@@ -137,6 +137,8 @@ durum: TASLAK v2 — diversity + 3 simülasyon analizi eklendi (sim sayıları s
 
 **Script:** "Makaledeki ortamı doğrulamak için her şeyi MATLAB'de sıfırdan, hiçbir hazır toolbox fonksiyonu kullanmadan kodladık. Yani 16-QAM modülasyonunu, kanalı, gürültüyü, pseudoinverse'i, sıralı iptalli alıcıyı — hepsini elle yazdık. Parametreler makaleyle aynı: sekiz verici, on iki alıcı, 16-QAM, ve zengin saçılmayı temsil eden bağımsız Rayleigh sönümlemeli kanal. Her SNR noktasında binlerce rastgele burst üretip Monte Carlo yöntemiyle blok hata oranını ve bit hata oranını ölçtük. Sırasıyla dört şey göstereceğim: ana karşılaştırma, sıralamanın etkisi, alıcı tipinin etkisi ve anten sayısının etkisi. Sonuçlara bakalım."
 
+**Ek not (Q&A — "Makalede 2 grafik, sizde 5, neden?"):** Makale tek bir gerçek donanım senaryosunu kanıtlamayı hedefledi (Şekil 2 temel kazanç, Şekil 3 konuma göre gürbüzlük). Biz aynı temel sonucu yeniden ürettik (SIM-1), sonra simülasyonun esnekliğiyle her tasarım kararını ayrı ayrı doğruladık: sıralama (SIM-2), alıcı tipi (SIM-3a), anten sayısı (SIM-3b). Şekil 3'ü (konuma göre gürbüzlük) tekrarlamadık çünkü ideal i.i.d. Rayleigh modelinde her "konum" istatistiksel olarak aynıdır; zaten binlerce rastgele kanal üzerinde ortalama alıyoruz. Detay: öğrenme dokümanı §11–§12. *(Bu açıklama .pptx slayt 18 speaker notes'una da eklendi.)*
+
 ---
 
 ## Slayt 19 — Simülasyon 1: BLER & BER (Nulling vs V-BLAST)  🖼️ SIM-1  (Doküman §11,12)

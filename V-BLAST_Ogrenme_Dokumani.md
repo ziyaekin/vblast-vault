@@ -312,6 +312,10 @@ Makale sadece teori değil — **gerçek bir laboratuvar prototipi** kurulmuş v
 - **Şekil 2:** "Sadece nulling" ile "nulling + optimal sıralı iptal" karşılaştırıldığında, iptal yaklaşımı **~4 dB** kazanç sağlar (bu da bu konfigürasyonda ~10 bps/Hz'lik verimlilik farkına denktir).
 - **Şekil 3:** Verici farklı konumlara taşındığında bile performans **gürbüz (robust)** kalır; tüm konumlarda 10⁻² BER'e göre en az 2 kat (mertebe) güvenlik payı vardır.
 
+> 📍 **"Konuma göre gürbüzlük (robustness)" ne demek?**
+> Makalenin Şekil 3'ü şunu test eder: alıcı sabit kalırken **verici anteni odanın farklı yerlerine taşıdıklarında** sistem hâlâ iyi çalışıyor mu? "Gürbüz / robust" kelimesi *"koşullar değişse bile performans bozulmadan, güvenilir kalıyor"* demektir. Sonuç: her konumda hata oranı düşük kaldı — yani sistem **belirli bir şanslı yerleşime bağımlı değil**, gerçek hayatta nereye koyarsan koy çalışır. Bu, bir yöntemin laboratuvardan çıkıp pratikte kullanılabilir olması için kritik bir özelliktir.
+> **Biz neden bu grafiği tekrarlamadık?** Bizim kanal modelimiz (i.i.d. Rayleigh) her "konumu" istatistiksel olarak **aynı** kabul eder: rastgele ürettiğimiz binlerce kanalın her biri zaten farklı bir "konum" gibidir ve hepsi aynı dağılımdan gelir. Dolayısıyla bizde "konum" diye ayrı bir eksen anlamlı olmaz — zaten binlerce rastgele kanal üzerinde ortalama alıyoruz. Gerçek konum farkını ölçmek için makaledeki gibi **gerçek donanım ölçümü** gerekir. Onun yerine, simülasyonun en iyi yaptığı şeyi yaptık: parametre süpürme (bkz. §12).
+
 **Neden bu kadar önemli?**
 Aynı **32 bit/vektör-sembol** verimliliğini **tek antenle** elde etmek isteseydik, **2³² ≈ 1 milyardan fazla noktalı** bir takımyıldız gerekirdi — bu pratikte imkânsızdır. MIMO + V-BLAST, bunu 8 sıradan 16-QAM vericiyle başarır.
 
@@ -340,6 +344,36 @@ Sunumda makale Şekil 2'yi yeniden üretmenin yanı sıra **kendi MATLAB simüla
 - **Neden fark eder?** N arttıkça sistemin **serbestlik derecesi / çeşitlemesi** artar (bkz. Bölüm 4, diversity). Her nulling vektörü daha küçük normlu olabilir → **SNR yükselir** → eğriler aşağı/sola kayar.
 - **Beklenen sonuç:** N büyüdükçe performans belirgin iyileşir. Bu, "fazladan alıcı anten = çeşitleme kazancı" fikrini somutlaştırır ve V-BLAST'in neden N > M ile çalıştığını açıklar.
 - **Bir cümlede:** *Daha çok alıcı anten = daha çok "kulak" = sinyalleri ayırmak daha kolay + sönümlenmeye karşı daha sağlam.*
+
+### 🔍 Hangi grafik neden var? (Makalede 2, bizde 5)
+
+**Makalede 2 sonuç grafiği vardı** (Şekil 2 ve Şekil 3). Bizim simülasyonumuzda **5 panel** var. Sebep basit: makale **tek bir gerçek donanımın çalıştığını kanıtlamak** istedi; biz ise yöntemin **her parçasını ayrı ayrı, kontrollü** göstermek istedik. Simülasyonda parametreleri serbestçe değiştirebildiğimiz için bu mümkün — gerçek donanımda her seferinde anten söküp takmak zorunda kalırdık. Şimdi her grafiği **tek tek, en sade haliyle**:
+
+**1) SIM-1 sol panel — BLER vs SNR (Nulling vs V-BLAST)**
+- *Ne soruyor?* "Sıralı iptal eklemek gerçekten yardımcı oluyor mu?"
+- *Ne görüyoruz?* V-BLAST eğrisi solda → aynı hata oranına **daha düşük SNR'da** ulaşıyor. ~4 dB kazanç.
+- *Neden var?* Bu, **makalenin Şekil 2'sinin birebir kopyası** — ana iddiayı kendi kodumuzla doğrulamak için.
+
+**2) SIM-1 sağ panel — BER vs SNR**
+- *Ne soruyor?* Aynı karşılaştırma, ama **bit** düzeyinde.
+- *Neden var?* BLER bir bloğu "ya hep ya hiç" sayar (içinde tek hata varsa blok hatalı); BER ise daha ince, daha yumuşak bir resim verir. İkisi birlikte daha güvenilir bir doğrulama olur.
+
+**3) SIM-2 — Sıralı vs sırasız iptal**
+- *Ne soruyor?* "Akışları **en güçlüden** başlayarak çözmek mi, yoksa gelişigüzel sabit bir sırayla çözmek mi daha iyi?"
+- *Ne görüyoruz?* Sıralı (maximin) eğri ~3 dB daha iyi.
+- *Neden var?* Makalenin **ana teorik sonucu** sıralamanın optimalliğiydi — ama bunu sadece **matematiksel olarak ispatladılar**, deneysel olarak izole etmediler (Şekil 2 yalnızca "null-only vs null+ordered-cancel" karşılaştırır). Biz teoremi **gözle gösteriyoruz**.
+
+**4) SIM-3 sol panel — ZF vs MMSE (N=M=8)**
+- *Ne soruyor?* "Hangi nulling reçetesi daha iyi: ZF mi, MMSE mi?"
+- *Ne görüyoruz?* Kare sistemde (alıcı=verici=8) MMSE ~3 dB daha iyi.
+- *Neden var?* Makale yalnızca ZF kullanır. Biz MMSE alternatifini ekleyip **alıcı tasarımının** önemini gösteriyoruz. (Kare sistemi seçtik çünkü orada ZF'in gürültü büyütmesi belirginleşir; N>M'de fark küçük kalır.)
+
+**5) SIM-3 sağ panel — Anten sayısı N etkisi**
+- *Ne soruyor?* "Alıcı anten sayısını artırmak ne kazandırır?"
+- *Ne görüyoruz?* N 12→16→20 arttıkça eğri sola/aşağı kayıyor (daha iyi).
+- *Neden var?* §4'teki **çeşitleme (diversity)** fikrini somutlaştırır ve V-BLAST'in neden N>M tuttuğunu açıklar.
+
+> **Özet:** SIM-1 = makaleyi yeniden üret; SIM-2, SIM-3 = simülasyonun sağladığı esneklikle yöntemin her tasarım kararını (sıralama, alıcı tipi, anten sayısı) ayrı ayrı doğrula. Makalenin Şekil 3'ünü (konuma göre gürbüzlük) ise yapmadık — sebebi §11'deki açıklamada: ideal Rayleigh modelinde her "konum" istatistiksel olarak aynıdır, o yüzden yerine parametre süpürmesi koyduk.
 
 > 🧪 **Not:** Tüm bu simülasyonlar MATLAB'de **hiçbir hazır toolbox fonksiyonu kullanılmadan**, sıfırdan kodlandı (16-QAM, kanal, gürültü, ZF/MMSE, sıralı iptal — hepsi elle). İdeal bağımsız Rayleigh kanal varsayıldığı için sonuçlar makaledeki gerçek ölçümlerle birebir aynı sayı olmasa da, **aynı trendleri ve büyüklük mertebesini** doğrular.
 
@@ -373,6 +407,12 @@ Hayır. Üç temel amacı vardır: (1) **Çeşitleme/diversity** — güvenilirl
 
 **S9: V-BLAST çeşitleme (diversity) kazanır mı, yoksa sadece hız mı?**
 Esas olarak hıza (çoğullama) odaklanır. Ama N>M olması (fazladan alıcı anten) ve sıralı iptal, ona bir miktar çeşitleme kazancı da verir. Bu yüzden N arttıkça performans iyileşir — bunu simülasyonda da gösteriyoruz.
+
+**S10: Makalede 2 grafik var, sizin sunumda 5. Neden?**
+Makale tek bir gerçek donanım senaryosunu kanıtlamayı hedefledi (Şekil 2: temel kazanç, Şekil 3: konuma göre gürbüzlük). Biz aynı temel sonucu yeniden ürettik (SIM-1), sonra simülasyonun sağladığı esneklikle yöntemin her tasarım kararını ayrı ayrı doğruladık: sıralamanın etkisi (SIM-2), alıcı tipi ZF/MMSE (SIM-3a), anten sayısı N (SIM-3b). Yani fazladan grafikler "öğretici parametre süpürmeleri"dir. Detay: öğrenme dokümanı §12.
+
+**S11: Makalenin Şekil 3'ünü (konuma göre gürbüzlük) neden tekrarlamadınız?**
+Şekil 3, vericiyi farklı fiziksel konumlara taşıyıp performansın sabit kalıp kalmadığını ölçer. Bizim ideal i.i.d. Rayleigh modelimizde her "konum" istatistiksel olarak aynıdır — zaten binlerce rastgele kanal üzerinde ortalama alıyoruz, ayrı bir "konum ekseni" anlamsız olurdu. Gerçek konum farkı için makaledeki gibi donanım ölçümü gerekir.
 
 ---
 
