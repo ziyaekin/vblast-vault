@@ -98,7 +98,7 @@ $$y_k=\mathbf{h}_k^{H}\mathbf{r}=a_k\underbrace{(\mathbf{h}_k^H\mathbf{h}_k)}_{\
 
 **(1) Çapraz korelasyon (j ≠ k) — ortalamada tam dik, küçük varyans:**
 
-$$\mathbb{E}\!\left[\mathbf{h}_k^{H}\mathbf{h}_j\right]=\sum_{i}\mathbb{E}[h_{ik}^{*}]\,\mathbb{E}[h_{ij}]=0,\qquad \operatorname{Var}\!\left(\mathbf{h}_k^{H}\mathbf{h}_j\right)=N$$
+$$\mathbb{E}\big[\mathbf{h}_k^{H}\mathbf{h}_j\big]=\sum_{i}\mathbb{E}[h_{ik}^{*}]\,\mathbb{E}[h_{ij}]=0, \qquad \mathrm{Var}\big(\mathbf{h}_k^{H}\mathbf{h}_j\big)=N$$
 
 (yani büyüklüğü yalnızca ~√N kadar)
 
