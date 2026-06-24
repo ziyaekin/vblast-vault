@@ -42,7 +42,7 @@ durum: TASLAK v2 — diversity + 3 simülasyon analizi eklendi (sim sayıları s
 ---
 
 ## Slayt 5 — Kapasite Sorunu  (Doküman §2)
-**Slaytta:** • Shannon: $C = B\log_2(1+\mathrm{SNR})$ • Bant B kıt • SNR `log` içinde → güç 2× → kapasite az artar • Spektral verimlilik (bps/Hz) sınırlı
+**Slaytta:** • Shannon: C = B·log₂(1+SNR) • Bant B kıt • SNR `log` içinde → güç 2× → kapasite az artar • Spektral verimlilik (bps/Hz) sınırlı
 
 **Script:** "Bir kanaldan ne kadar hızlı veri geçirebileceğimizin teorik sınırını Shannon formülü verir: kapasite, bant genişliği çarpı log iki tabanında bir artı SNR. Buradaki acı gerçek şu: bant genişliğini artıramıyoruz çünkü spektrum kıt. SNR'ı artırmak için gücü iki katına çıkarsak bile, SNR logaritmanın içinde olduğu için kapasite sadece bir tık artar — yani güç pompalamak çok verimsiz. Sonuç olarak, birim banttan geçirdiğimiz bit sayısı, yani spektral verimlilik, geleneksel sistemlerde birkaç bps/Hz'de tıkanır. Peki bandı ve gücü artıramıyorsak ne yapacağız? Cevap: yepyeni bir boyut eklemek — uzayı."
 
@@ -63,7 +63,7 @@ durum: TASLAK v2 — diversity + 3 simülasyon analizi eklendi (sim sayıları s
 ---
 
 ## Slayt 8 — Uzamsal Çoğullama & Kapasite Avantajı  (Doküman §5)
-**Slaytta:** • 1 akışı M alt-akışa böl, ayrı antenlerden aynı anda gönder • $C_{MIMO} \approx M\cdot B\log_2(1+\mathrm{SNR})$ • Kapasite anten sayısıyla **doğrusal** büyür • Ekstra bant/güç YOK • V-BLAST = SM'nin pratik gerçeklemesi
+**Slaytta:** • 1 akışı M alt-akışa böl, ayrı antenlerden aynı anda gönder • Kapasite ≈ M·B·log₂(1+SNR) • Kapasite anten sayısıyla **doğrusal** büyür • Ekstra bant/güç YOK • V-BLAST = SM'nin pratik gerçeklemesi
 
 **Script:** "Çoğullamanın gücünü biraz açalım. Tek bir hızlı akışı M parçaya bölüp her parçayı ayrı antenden, aynı frekansta, aynı anda gönderiyoruz. Sonuç dramatik: hatırlayın, SISO'da gücü iki katına çıkarmak kapasiteyi sadece logaritmik artırıyordu. MIMO'da ise kapasite, anten sayısı M ile doğrudan çarpılıyor — yani doğrusal büyüyor. Sekiz anten, kabaca sekiz kat kapasite, üstelik ne ekstra bant ne ekstra güç gerekmeden. Spektrumun altın değerinde olduğu bir dünyada bu bir devrim. V-BLAST işte bu fikrin gerçek donanımda çalışan pratik bir gerçeklemesi. Şimdi soru şu: bu karışmış akışları alıcıda nasıl ayıracağız?"
 
@@ -91,35 +91,35 @@ durum: TASLAK v2 — diversity + 3 simülasyon analizi eklendi (sim sayıları s
 ---
 
 ## Slayt 12 — Detection & Nulling (ZF / MMSE)  (Doküman §8a)
-**Slaytta:** • Her akışı sırayla "istenen", gerisini "girişim" say • Ağırlık vektörü w ile bastır • ZF: $w_i^\top (H)_j = \delta_{ij}$ (diğerlerini sıfırla) • MMSE: gürültü+girişimi dengeler • Karar: $y_i = w_i^\top r$
+**Slaytta:** • Her akışı sırayla "istenen", gerisini "girişim" say • Ağırlık vektörü w ile bastır • ZF: wᵢᵀ·(H)ⱼ = δᵢⱼ (diğerlerini sıfırla) • MMSE: gürültü+girişimi dengeler • Karar: yᵢ = wᵢᵀ·r
 
 **Script:** "Karışmış sinyalleri ayırmanın ilk yolu nulling, yani sıfırlama. Mantık şu: bir akışı 'istenen sinyal', diğerlerinin hepsini 'girişim' kabul ediyoruz. Sonra alınan sinyali öyle bir ağırlık vektörüyle çarpıyoruz ki istenen akış geçsin, diğerleri sıfırlansın. Zero-Forcing yönteminde bu koşul şu: ağırlık vektörü, istenen akışın kanal sütunuyla çarpınca bir, diğerleriyle çarpınca sıfır versin — formüldeki Kronecker delta tam bunu söylüyor. ZF basittir ama gürültüyü büyütebilir. Alternatifi MMSE, girişim ile gürültüyü birlikte dengeler ve genelde daha iyidir; bunu birazdan simülasyonda karşılaştıracağız. Makale sadelik için ZF üzerinden gider. Ama nulling tek başına en iyisi değil — bir adım daha var."
 
 ---
 
 ## Slayt 13 — Sembol İptali (SIC): Adım Adım  (Doküman §8b,c)
-**Slaytta:** Akış şeması: **Nulling** → **Slice** $\hat{a}=Q(y)$ → **Cancel** $r_{i+1}=r_i-\hat{a}_{k_i}(H)_{k_i}$ → tekrarla. • Çözülen sembolü sinyalden çıkar → kalan girişim azalır • DFE'ye benzer
+**Slaytta:** Akış şeması: **Nulling** → **Slice** â = Q(y) → **Cancel** rᵢ₊₁ = rᵢ − âₖᵢ·(H)ₖᵢ → tekrarla. • Çözülen sembolü sinyalden çıkar → kalan girişim azalır • DFE'ye benzer
 
 **Script:** "İşte V-BLAST'i güçlü kılan ikinci fikir: ardışık sembol iptali, yani SIC. Mantık çok sezgisel: bir sembolü çözdüysem, onun alınan sinyale kattığı katkıyı hesaplayıp geri çıkarabilirim. Böylece geriye bir girişim kaynağı daha az kalır. Döngü şöyle işliyor: önce nulling ile bir akışın kaba tahminini al; sonra slice et, yani en yakın geçerli QAM noktasına yuvarla; sonra bu tahmini kanal sütunuyla çarpıp alınan sinyalden çıkar — buna cancel diyoruz. Artık problem küçüldü, kalan akışlar için aynı döngüyü tekrarlıyoruz. Her turda iş kolaylaşıyor. Bu yaklaşım, ekolayzır tasarımındaki karar geri-beslemeli denkleştirmeye çok benzer. Peki bu neden saf nulling'den iyi?"
 
 ---
 
 ## Slayt 14 — Neden İptal Daha İyi?  (Doküman §8)
-**Slaytta:** • Saf nulling: her w, M−1 akışa ortogonal olmalı (ağır kısıt) • İptal ile: w sadece **kalan** akışlara ortogonal • Cauchy-Schwarz: çok kısıt → büyük ‖w‖ • SNR: $\rho_{k_i} = \dfrac{\langle|a_{k_i}|^2\rangle}{\sigma^2\|w_{k_i}\|^2}$ → küçük norm = yüksek SNR
+**Slaytta:** • Saf nulling: her w, M−1 akışa ortogonal olmalı (ağır kısıt) • İptal ile: w sadece **kalan** akışlara ortogonal • Cauchy-Schwarz: çok kısıt → büyük ‖w‖ • SNR: ρₖᵢ = ⟨|aₖᵢ|²⟩ / (σ²·‖wₖᵢ‖²) → küçük norm = yüksek SNR
 
 **Script:** "Cevap ağırlık vektörünün normunda gizli. Saf nulling'de her ağırlık vektörü, diğer bütün M eksi bir akışa birden ortogonal olmak zorunda — çok ağır bir kısıt. Ama iptal kullanınca, bir akışı çözüp çıkardıktan sonra, bir sonraki ağırlık vektörü artık sadece kalan, henüz çözülmemiş akışlara ortogonal olmak zorunda. Yani daha az kısıt. Burada Cauchy-Schwarz eşitsizliği devreye giriyor: bir vektör ne kadar çok şeye ortogonal olmaya zorlanırsa normu o kadar büyür. Ve şu kritik formüle bakın: detection sonrası SNR, ağırlık vektörünün normunun karesiyle ters orantılı. Küçük norm, yüksek SNR demek. İptal kısıtları azalttığı için norm küçülür, SNR yükselir, hata düşer. İşte iptalin saf nulling'i yenmesinin matematiksel sebebi bu."
 
 ---
 
 ## Slayt 15 — Optimal Sıralama: "En İyiyi Önce Al"  (Doküman §9)
-**Slaytta:** • İptalde **sıra önemli** (saf nulling'de değil) • En zayıf akış hatayı belirler → maximin hedefi • **Sonuç:** her adımda en yüksek SNR'lı akışı seç → küresel optimum • Seçim: $k_i = \arg\min_j \|(G_i)_j\|^2$ • Hata yayılımını azaltır
+**Slaytta:** • İptalde **sıra önemli** (saf nulling'de değil) • En zayıf akış hatayı belirler → maximin hedefi • **Sonuç:** her adımda en yüksek SNR'lı akışı seç → küresel optimum • Seçim: kᵢ = arg minⱼ ‖(Gᵢ)ⱼ‖² • Hata yayılımını azaltır
 
 **Script:** "İptal kullanınca yeni bir soru doğuyor: akışları hangi sırayla çözmeliyiz? Çünkü önce çözdüğümüz akış, sonrakileri etkiliyor. Tüm akışlar aynı takımyıldızı kullandığı için, sistemin hatasını en zayıf akış belirler. O halde mantıklı hedef, en kötü akışın SNR'ını mümkün olduğunca yükseltmek — buna maximin diyoruz. Makalenin zarif ve şaşırtıcı sonucu şu: her adımda sadece o anki en güçlü, en yüksek SNR'lı akışı seçip çözmek — yani basit bir açgözlü kural — küresel olarak en iyi sıralamayı garanti ediyor. Pratikte 'en güçlü akış', pseudoinverse matrisinin en küçük normlu satırına karşılık gelir. Bunun bir faydası daha var: en güvenilir kararı başta verdiğimiz için hata yayılımını da azaltıyoruz. Bu sezgisel kural yıllardır kullanılıyordu ama optimalliği ilk kez bu makalede ispatlandı."
 
 ---
 
 ## Slayt 16 — Tam Algoritma (Özyinelemeli) — Eq. (9)  (Doküman §10)
-**Slaytta:** Başlangıç: $G_1=H^+$, $k_1=\arg\min_j\|(G_1)_j\|^2$. Özyineleme: $w_{k_i}=(G_i)_{k_i}$ → $y_{k_i}=w_{k_i}^\top r_i$ → $\hat{a}_{k_i}=Q(y_{k_i})$ → $r_{i+1}=r_i-\hat{a}_{k_i}(H)_{k_i}$ → $G_{i+1}=H_{\bar{k_i}}^+$ → $k_{i+1}=\arg\min\|(G_{i+1})_j\|^2$.
+**Slaytta:** Başlangıç: G₁ = H⁺, k₁ = arg minⱼ ‖(G₁)ⱼ‖². Özyineleme: wₖᵢ = (Gᵢ)ₖᵢ → yₖᵢ = wₖᵢᵀ·rᵢ → âₖᵢ = Q(yₖᵢ) → rᵢ₊₁ = rᵢ − âₖᵢ·(H)ₖᵢ → Gᵢ₊₁ = (sönükleştirilmiş H)⁺ → kᵢ₊₁ = arg minⱼ ‖(Gᵢ₊₁)ⱼ‖².
 
 **Script:** "Bütün parçaları tek bir özyinelemeli algoritmada birleştirelim. Başlangıçta H'nin pseudoinverse'ini hesaplıyoruz ve en küçük normlu satırı bularak ilk çözeceğimiz akışı seçiyoruz. Sonra döngü: o akışın nulling vektörünü al, karar istatistiğini hesapla, slice et, tahmini sinyalden çıkar. Şimdi önemli adım: H'yi 'sönükleştiriyoruz' — çözdüğümüz akışın sütununu sıfırlayıp pseudoinverse'i yeniden hesaplıyoruz. Çünkü o akış artık yok; sistem bir antenle küçülmüş gibi davranıyor. Yeni matriste yine en küçük normlu satırı seçip bir sonraki akışa geçiyoruz. Bütün akışlar bitene kadar bu böyle sürüyor. Birkaç satır gibi görünse de, bu algoritma MIMO alıcısının kalbidir. Şimdi gerçekten çalışıyor mu, ona bakalım."
 
