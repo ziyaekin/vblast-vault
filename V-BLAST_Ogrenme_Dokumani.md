@@ -87,8 +87,11 @@ Anahtar kavram **kanal matrisi H**'dir. M verici ve N alıcı anten varsa, her v
 > Bu kutu, "kanal sütunları bağımsızsa neden sinyalleri ayırabiliyoruz?" sorusunun **matematiksel** cevabıdır. Yeni başlayan için zor gelebilir; ilk okumada atlanabilir, ama sunumda sorulursa çok güçlü bir cevaptır.
 
 **Sezgi (CDMA benzetmesi):** Sistemimizi açalım:
+
 $$\mathbf{r} = H\mathbf{a} + \boldsymbol{\nu} = \sum_{k=1}^{M} a_k\,\mathbf{h}_k + \boldsymbol{\nu}$$
+
 Burada $\mathbf{h}_k$, $H$'nin **k. sütunu** — yani k. verici anteninin tüm alıcılardaki "imzası". Bu, **CDMA**'ye birebir benzer: orada her kullanıcı bir yayma kodu $\mathbf{c}_k$ ile çarpar, $\mathbf{r}=\sum_k a_k\mathbf{c}_k+\boldsymbol\nu$. Fark: CDMA'de kodları **biz** tasarlarız; MIMO'da imzayı **zengin saçılmalı kanal bedavaya verir.** Bir stream'i çözmek için, CDMA'deki gibi **korelasyon (eşleşmiş filtre)** alırız:
+
 $$y_k=\mathbf{h}_k^{H}\mathbf{r}=a_k\underbrace{(\mathbf{h}_k^H\mathbf{h}_k)}_{\text{istenen}}+\sum_{j\neq k}a_j\underbrace{(\mathbf{h}_k^H\mathbf{h}_j)}_{\text{girişim}}+\mathbf{h}_k^H\boldsymbol{\nu}$$
 
 **Bağımsızlık → korelasyonlar ~0.** $h_{ij}\sim\mathcal{CN}(0,1)$ ve bağımsız olduğundan, $\mathbf{h}_k^H\mathbf{h}_j=\sum_i h_{ik}^*h_{ij}$ için:
@@ -99,7 +102,9 @@ $$y_k=\mathbf{h}_k^{H}\mathbf{r}=a_k\underbrace{(\mathbf{h}_k^H\mathbf{h}_k)}_{\
 İstenen terim $N$ ile (eşevreli) büyür, girişim yalnızca $\sqrt N$ ile (eşevresiz) → sütunlar **asimptotik dik**, tıpkı ortogonal CDMA kodları gibi. Burada $N$ = CDMA'nin **işlem kazancı (processing gain)**.
 
 **Matris formu — Gram matrisi birim matrise yoğunlaşır:**
+
 $$\frac{1}{N}\,H^{H}H\;\xrightarrow[N\to\infty]{}\;I_M\quad\Rightarrow\quad \hat{\mathbf{a}}=\tfrac{1}{N}H^H\mathbf{r}\approx \mathbf{a}+\text{gürültü}$$
+
 (köşegen $/N\to1$, köşegen-dışı $/N\to0$). Streamler ayrışır — CDMA'de "ortogonal kodla korelasyon" ile aynı mekanizma.
 
 **ZF/MMSE bağlantısı:** Eşleşmiş filtrenin dikliği tam değil ($\rho_{kj}\sim1/\sqrt N$). ZF girişimi **tam** sıfırlar: $G_{\text{ZF}}=(H^HH)^{-1}H^H$. Bu yalnızca $H^HH$ **tersinir**, yani sütunlar **doğrusal bağımsız** ise mümkün — ki $h_{ij}$ bağımsız ve $N\ge M$ olduğunda neredeyse kesin sağlanır. **Bağımsızlık bozulursa** ($\mathbf{h}_i\approx\mathbf{h}_j$): $H^HH$ tekilleşir, $(H^HH)^{-1}$ patlar, gürültü büyür → bu da **SIM-3a'da (N=M=8) ZF'in kötüleşip MMSE'nin** $\big(H^HH+N_0I\big)^{-1}$ ile bunu yumuşatmasının sebebidir.
@@ -295,20 +300,47 @@ $$k_i = \arg\min_j \| (G_i)_j \|^2$$
 
 ## 10. Önemli formüller ve anlamları
 
-Aşağıdaki tablo, sunumda kullanacağın temel formülleri ve **ne anlama geldiklerini** sade dille özetler.
+Aşağıda sunumda kullanacağın temel formüller ve **ne anlama geldikleri** sade dille özetlenmiştir. *(Formüller GitHub'da da düzgün görünsün diye her biri ayrı satırda verildi.)*
 
-| # | Formül | Ne anlama gelir? |
-|---|---|---|
-| **Sistem modeli** | $r = Ha + \nu$ | Alınan sinyal = kanal × gönderilen + gürültü. Tüm problemin başlangıç noktası. |
-| **ZF nulling koşulu** | $w_i^{\top}(H)_j = \delta_{ij}$ | Ağırlık vektörü, istenen akışı 1 ile geçirir, diğerlerini 0'a bastırır. |
-| **Karar istatistiği** | $y_{k_i} = w_{k_i}^{\top} r_i$ | Alınan sinyali ağırlıkla çarpıp ilgili akışın "ham tahminini" üret. |
-| **Slicing (dilimleme)** | $\hat{a}_{k_i} = Q(y_{k_i})$ | Ham tahmini en yakın geçerli QAM sembolüne yuvarla. |
-| **İptal (cancellation)** | $r_{i+1} = r_i - \hat{a}_{k_i}(H)_{k_i}$ | Çözülen sembolün katkısını çıkar; kalan sinyalde bir girişim daha az. |
-| **Sıralı ZF kısıtı** | $w_{k_i}^{\top}(H)_{k_j} = \begin{cases} 0 & j \geq i \\ 1 & j = i \end{cases}$ | `w` yalnızca **henüz çözülmemiş** akışlara ortogonal olsun (çözülenleri umursama). |
-| **Detection sonrası SNR** | $\rho_{k_i} = \dfrac{\langle |a_{k_i}|^2 \rangle}{\sigma^2 \|w_{k_i}\|^2}$ | SNR, ağırlık vektörünün normuyla **ters** orantılı. Küçük norm = yüksek SNR. Bu, sıralamanın neden işe yaradığının matematiksel kalbidir. |
-| **Optimal sıra seçimi** | $k_i = \arg\min_j \|(G_i)_j\|^2$ | En küçük normlu satır = en yüksek SNR'lı akış = "önce bunu çöz". |
-| **Pseudoinverse başlangıcı** | $G_1 = H^{+}$ | Moore-Penrose pseudoinverse; nulling vektörleri bunun satırlarından gelir. |
-| **Deflation (sönükleştirme)** | $G_{i+1} = H_{\overline{k_i}}^{+}$ | Çözülen akışların sütunları sıfırlanmış "küçültülmüş H"nin pseudoinverse'i. Sistem her turda küçülür. |
+**1) Sistem modeli** — Alınan sinyal = kanal × gönderilen + gürültü. Tüm problemin başlangıç noktası.
+
+$$r = Ha + \nu$$
+
+**2) ZF nulling koşulu** — Ağırlık vektörü, istenen akışı 1 ile geçirir, diğerlerini 0'a bastırır.
+
+$$w_i^{\top}(H)_j = \delta_{ij}$$
+
+**3) Karar istatistiği** — Alınan sinyali ağırlıkla çarpıp ilgili akışın "ham tahminini" üret.
+
+$$y_{k_i} = w_{k_i}^{\top} r_i$$
+
+**4) Slicing (dilimleme)** — Ham tahmini en yakın geçerli QAM sembolüne yuvarla.
+
+$$\hat{a}_{k_i} = Q(y_{k_i})$$
+
+**5) İptal (cancellation)** — Çözülen sembolün katkısını çıkar; kalan sinyalde bir girişim daha az.
+
+$$r_{i+1} = r_i - \hat{a}_{k_i}(H)_{k_i}$$
+
+**6) Sıralı ZF kısıtı** — `w` yalnızca **henüz çözülmemiş** akışlara ortogonal olsun (çözülenleri umursama).
+
+$$w_{k_i}^{\top}(H)_{k_j} = \begin{cases} 0 & j \geq i \\ 1 & j = i \end{cases}$$
+
+**7) Detection sonrası SNR** — SNR, ağırlık vektörünün normuyla **ters** orantılı. Küçük norm = yüksek SNR. Sıralamanın neden işe yaradığının matematiksel kalbi budur.
+
+$$\rho_{k_i} = \frac{\langle |a_{k_i}|^2 \rangle}{\sigma^2 \, \|w_{k_i}\|^2}$$
+
+**8) Optimal sıra seçimi** — En küçük normlu satır = en yüksek SNR'lı akış = "önce bunu çöz".
+
+$$k_i = \arg\min_j \|(G_i)_j\|^2$$
+
+**9) Pseudoinverse başlangıcı** — Moore-Penrose pseudoinverse; nulling vektörleri bunun satırlarından gelir.
+
+$$G_1 = H^{+}$$
+
+**10) Deflation (sönükleştirme)** — Çözülen akışların sütunları sıfırlanmış "küçültülmüş H"nin pseudoinverse'i. Sistem her turda küçülür.
+
+$$G_{i+1} = H_{\overline{k_i}}^{+}$$
 
 > **Tüm algoritmanın özeti (özyinelemeli):**
 > 1. `G₁ = H⁺` hesapla, en küçük normlu satırdan ilk akışı seç.
