@@ -70,8 +70,8 @@ function est = sic_core(H, R, const, N0, crit, ordered)
         w = G(k, :);                    % 1xN nulling vektoru
         y = w * Rcur;                   % 1xT karar istatistigi
         idx = qam16_demod(y);           % 1xT
-        est(k, :) = idx;
-        val = const(idx);               % 1xT tahmini semboller
+        est(k, :) = idx(:).';           % 1xT (yon garantili)
+        val = reshape(const(idx), 1, []);  % 1xT (const sutun oldugu icin yonu zorla)
         Rcur = Rcur - H(:, k) * val;    % NxT: bu akisi sinyalden cikar
 
         % --- deflation: cozulen sutunu sifirla, sonraki tura gec ---
