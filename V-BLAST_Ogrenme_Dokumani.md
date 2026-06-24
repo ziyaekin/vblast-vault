@@ -126,6 +126,25 @@ Bu yalnızca **H^H·H tersinir**, yani sütunlar **doğrusal bağımsız** ise m
 
 > 🎯 **Tek cümle:** Kanal katsayılarının bağımsızlığı ⇒ kanal sütunları ortalamada dik, çapraz korelasyon ~1/√N ⇒ ortogonal CDMA kodları gibi davranırlar; (1/N)·H^H·H → I olduğundan korelasyon/nulling ile streamler ayrışır, **N** işlem kazancını verir.
 
+### 🌍 Gerçek dünya notu: korelasyon, ZF ve koşul sayısı
+
+Yukarıdaki ideal i.i.d. analizinde sütunlar bağımsızdı. **Gerçek dünyada bu tam tutmaz** — ama "bağımsızlık" derken **iki ayrı kavramı** karıştırmamak gerekir:
+
+- **İstatistiksel bağımsızlık** (korelasyon = 0): Gerçekte yoktur. Anten aralığı λ/2'den küçükse, saçılma zayıfsa veya baskın görüş hattı (LOS) varsa sütunlar korelasyonludur (ρ ≠ 0).
+- **Doğrusal bağımsızlık** (tam rank, HᴴH tersinir): ZF'nin gerçekte ihtiyaç duyduğu **sadece budur**. Ve bu, gerçek dünyada da **neredeyse her zaman sağlanır** — çünkü sütunların *tam* doğrusal bağımlı olması ölçü-sıfır (probability-zero) bir olaydır.
+
+**Önemli sonuç:** Korelasyon, sütunları *tam paralel* değil, *neredeyse paralel* yapar. Doğrusal bağımsızlık **korunur** → **ZF (mükemmel CSI ile) girişimi yine tam sıfırlar.** Korelasyonun bedeli girişim sızması değil, **gürültü büyümesidir**: H kötü koşullu olunca (HᴴH)⁻¹ büyür ve gürültü amplifiye olur. Doğru ölçüt korelasyon değil, **koşul sayısıdır (condition number):**
+
+$$\kappa(H)=\frac{\sigma_{\max}(H)}{\sigma_{\min}(H)}, \qquad \text{ZF gürültüsü}\;\propto\;\sigma^2\,[(H^{H}H)^{-1}]_{kk}$$
+
+Doğrusal bağımsız ⇔ σₘᵢₙ > 0. Korelasyon σₘᵢₙ'i küçültür (ama > 0 tutar) → κ büyür → ZF gürültü büyümesi artar. **SIM-3a'daki (N=M=8) ZF kötüleşmesi tam olarak budur.**
+
+**ZF'de gerçek artık girişim hiç olmaz mı?** Olur — ama korelasyondan değil, **kusurlu kanal kestiriminden** (Ĥ ≠ H). Pratikte H eğitim dizisiyle tahmin edilir; hata varsa G·H ≠ I olur ve girişim tam sıfırlanamaz. Makale "H doğru tahmin edildi" varsaydığı için bu etkiyi idealize eder.
+
+**İstisna — rank gerçekten düşebilir:** Saf LOS uzak alan (antenler bir doğru üzerinde) veya **keyhole/pinhole** kanalları gibi dejenere geometrilerde sütunlar pratikte doğrusal bağımlı hale gelir; σₘᵢₙ → 0, κ → ∞, ZF çöker (mükemmel CSI olsa bile). **Zengin saçılmanın "gerekli" olmasının asıl sebebi budur:** tam rank'i ve iyi koşulluluğu garanti eder.
+
+> 📌 **Özet:** Gerçek dünyada sütunlar istatistiksel bağımsız değildir (korelasyon var) ama doğrusal olarak neredeyse her zaman bağımsızdır (tam rank; keyhole/LOS dejenere durumları hariç). ZF girişimi yine tam sıfırlar; korelasyonun bedeli **gürültü büyümesidir** (κ ile ölçülür). ZF'de gerçek artık girişim ancak **kanal kestirim hatasından** doğar. "Sıfıra yakın" derken kastedilen: λ/2 aralık + zengin saçılma, κ'yı küçük tutar.
+
 ---
 
 ## 4. Çok antenin ÜÇ amacı: çeşitleme, hüzmeleme, çoğullama
